@@ -2,13 +2,34 @@
 
 class Question {
 
+    private int $id;
     private string $label;
     private array $answers;
 
-    public function __construct(string $question) {
+    public function __construct(array $question) {
         $this->answers = [];
 
-        $this->setLabel($question);
+        $this->hydrate($question);
+    }
+
+    /**
+     * Get id.
+     *
+     * @return id.
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    /**
+     * Set id.
+     *
+     * @param id the value to set.
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
      /**
@@ -44,7 +65,13 @@ class Question {
     public function addAnswer(Answer $answer) {
         $this->answers[] = $answer;
     }
-     
+
+     private function hydrate($question) {
+         if ($question['id_question']) $this->setId($question['id_question']);
+
+         if ($question['question']) $this->setLabel($question['question']);
+     }
+
 }
 
 ?>

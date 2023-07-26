@@ -1,3 +1,9 @@
+<?php
+
+require_once('utils/autoload.php');
+require_once('utils/db-connect.php');
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,20 +17,11 @@
         <div class="text-center">
 <?php
 
-require_once('utils/autoload.php');
+$db = dbConnect();
 
-$qcm = new Qcm();
+$qcm = new QcmRepository($db);
 
-$q1 = new Question('POO signifie :');
-
-$q1->AddAnswer(new Answer('PHP Orienté Objet'));
-$q1->AddAnswer(new Answer('Programmation Orientée Outils'));
-$q1->AddAnswer(new Answer('Papillon Onirique Ostentatoire'));
-$q1->AddAnswer(new Answer('Programmation Orientée Objet', Answer::BONNE_REPONSE));
-
-$qcm->addQuestion($q1);
-
-$qcm->generate();
+$qcm->getQcm()->generate();
 
 ?>
         </div>

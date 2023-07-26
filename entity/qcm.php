@@ -15,16 +15,16 @@ class Qcm {
         $quiz = '';
 
         foreach($this->questionsList as $key => $question) {
-            $q = '<p>' . $question->getLabel() . '</p>';
+            $q = '<p>' . $question->getLabel() . '</p>' . PHP_EOL;
 
-            foreach($question->getAnswers() as $answer) {
-                $q .= '<button type="submit" name="reponse" value="' . $answer->getLabel()  . '">' . $answer->getLabel()  . '</button>';
+            foreach($question->getAnswers() as $aKey => $answer) {
+                $q .= '<button type="submit" name="reponse" value="' . $answer->getLabel()  . '" class="btn btn-outline-primary m-2">' . $answer->getLabel()  . '</button>' . PHP_EOL;
             }
 
             $quiz.= $q;
         }
 
-        echo '<form action="index.php" method="post">' . $quiz . '</form>';
+        echo '<form action="index.php" method="post">' . $quiz . '</form>' . PHP_EOL;
     }
 }
 
