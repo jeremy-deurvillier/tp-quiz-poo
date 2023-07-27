@@ -5,7 +5,8 @@ class QcmRepository {
     private PDO $db;
     private Qcm $qcm;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->setDb($db);
         $this->setQcm(new Qcm());
 
@@ -17,7 +18,7 @@ class QcmRepository {
      *
      * @return db.
      */
-    public function getDb()
+    public function getDb(): PDO
     {
         return $this->db;
     }
@@ -37,7 +38,7 @@ class QcmRepository {
       *
       * @return qcm.
       */
-     public function getQcm()
+     public function getQcm(): Qcm
      {
          return $this->qcm;
      }
@@ -47,26 +48,38 @@ class QcmRepository {
       *
       * @param qcm the value to set.
       */
-     public function setQcm($qcm)
+     private function setQcm($qcm)
      {
          $this->qcm = $qcm;
      }
 
-     private function getAllQuestions() {
+     private function getAllQuestions(): Array
+     {
         $query = $this->getDb()->query('SELECT * FROM questions;');
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
      }
 
-     private function getAllAnswersByQuestion(int $question) {
-        $query = $this->getDb()->prepare('SELECT * FROM responses WHERE question_id = :id;');
+     private function getGoodAnswersByQuestion(int $question): Array
+     {
+        $query = $this->getDb()->prepare('SELECT * FROM responses WHERE question_id = :id AND is_correct IS true;');
         $query->bindValue(':id', $question, PDO::PARAM_INT);
         $query->execute();
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
      }
 
-     private function generateNewQcm() {
+     private function getBadsAnswersByQuestion(int $question): Array
+     {
+        $query = $this->getDb()->prepare('SELECT * FROM responses WHERE question_id = :id AND is_correct IS false;');
+        $query->bindValue(':id', $question, PDO::PARAM_INT);
+        $query->execute();
+
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+     }
+
+     private function generateNewQcm()
+     {
         $aq = $this->getAllQuestions();
 
         shuffle($aq);
@@ -74,12 +87,22 @@ class QcmRepository {
         for ($item = 0; $item <= 7; $item ++) {
             $q = new Question($aq[$item]);
 
-            $ar = $this->getAllAnswersByQuestion($aq[$item]['id_question']);
+            $cr = $this->getGoodAnswersByQuestion($aq[$item]['id_question']);
+            $ir = $this->getBadsAnswersByQuestion($aq[$item]['id_question']);
 
-            shuffle($ar);
+            shuffle($ir);
+
+            array_pop($ir);
+            array_push($ir, $cr[0]);
+
+            shuffle($ir);
 
             for ($index = 0; $index <= 3; $index ++) {
-                $q->addAnswer(new Answer($ar[$index]));
+                if ($ir[$index]['is_correct']) {
+                    $q->addAnswer(new Answer($ir[$index], Answer::BONNE_REPONSE));
+                } else {
+                    $q->addAnswer(new Answer($ir[$index]));
+                }
             }
 
             $this->getQcm()->addQuestion($q);

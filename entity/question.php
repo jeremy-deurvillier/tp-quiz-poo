@@ -6,7 +6,8 @@ class Question {
     private string $label;
     private array $answers;
 
-    public function __construct(array $question) {
+    public function __construct(array $question)
+    {
         $this->answers = [];
 
         $this->hydrate($question);
@@ -17,7 +18,7 @@ class Question {
      *
      * @return id.
      */
-    public function getId()
+    public function getId(): Int
     {
         return $this->id;
     }
@@ -37,7 +38,7 @@ class Question {
       *
       * @return label.
       */
-     public function getLabel()
+     public function getLabel(): String
      {
          return $this->label;
      }
@@ -57,16 +58,18 @@ class Question {
       *
       * @return answers.
       */
-     public function getAnswers()
+     public function getAnswers(): Array
      {
          return $this->answers;
      }
 
-    public function addAnswer(Answer $answer) {
+     public function addAnswer(Answer $answer)
+     {
         $this->answers[] = $answer;
     }
 
-     private function hydrate($question) {
+     private function hydrate($question)
+     {
          if ($question['id_question']) $this->setId($question['id_question']);
 
          if ($question['question']) $this->setLabel($question['question']);

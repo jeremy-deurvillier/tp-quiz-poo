@@ -7,7 +7,8 @@ class Answer {
     private bool $isCorrect;
     public const BONNE_REPONSE = true;
 
-    public function __construct(array $answer) {
+    public function __construct(array $answer)
+    {
         $this->hydrate($answer);
     }
 
@@ -16,7 +17,7 @@ class Answer {
       *
       * @return label.
       */
-     public function getLabel()
+     public function getLabel(): String
      {
          return $this->label;
      }
@@ -37,7 +38,7 @@ class Answer {
      *
      * @return id.
      */
-    public function getId()
+    public function getId(): Int
     {
         return $this->id;
     }
@@ -57,7 +58,7 @@ class Answer {
      *
      * @return isCorrect.
      */
-    public function getIsCorrect()
+    public function getIsCorrect(): Bool
     {
         return $this->isCorrect;
     }
@@ -72,7 +73,8 @@ class Answer {
         $this->isCorrect = $isCorrect;
     }
 
-    private function hydrate(array $answer) {
+    private function hydrate(array $answer)
+    {
         if ($answer['id_response']) $this->setId($answer['id_response']);
 
         if ($answer['response']) $this->setLabel($answer['response']);

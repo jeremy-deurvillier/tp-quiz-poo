@@ -21,6 +21,10 @@ $db = dbConnect();
 
 $qcm = new QcmRepository($db);
 
+echo '<pre>';
+//var_dump($qcm->getQcm());
+echo '</pre>';
+
 $qcm->getQcm()->generate();
 
 ?>
